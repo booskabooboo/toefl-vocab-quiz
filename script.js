@@ -1,8 +1,8 @@
 let words = [];
-let currentIndex = 0;
 
 async function loadWords() {
-  const url = "https://raw.githubusercontent.com/mahavivo/english-wordlists/master/toefl.json"; 
+  // 外部のTOEFL単語データ（JSON形式）
+  const url = "https://raw.githubusercontent.com/mahavivo/english-wordlists/master/toefl.json";
   const res = await fetch(url);
   words = await res.json();
   nextQuestion();
@@ -12,12 +12,16 @@ function nextQuestion() {
   const question = words[Math.floor(Math.random() * words.length)];
   document.getElementById("word").textContent = question.word;
 
-  // シャッフルして4択生成
+  // 4択を作成（正解 + ランダム3つ）
   const choices = [question.correct];
   while (choices.length < 4) {
     const wrong = words[Math.floor(Math.random() * words.length)].correct;
-    if (!choices.includes(wrong)) choices.push(wrong);
+    if (!choices.includes(wrong)) {
+      choices.push(wrong);
+    }
   }
+
+  // シャッフル
   choices.sort(() => Math.random() - 0.5);
 
   const choicesDiv = document.getElementById("choices");
