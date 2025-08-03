@@ -2,8 +2,8 @@ let words = [];
 
 async function loadWords() {
   try {
-    // 外部のTOEFL単語データ
-    const url = "https://raw.githubusercontent.com/mahavivo/english-wordlists/master/toefl.json";
+    // 自分のGitHub Pages上のJSONファイルのURLに置き換え
+    const url = "https://booskabooboo.github.io/toefl-vocab-quiz/toefl_words.json";
     const res = await fetch(url);
     words = await res.json();
 
@@ -22,10 +22,10 @@ function nextQuestion() {
   const question = words[Math.floor(Math.random() * words.length)];
   document.getElementById("word").textContent = question.word;
 
-  // 4択を作成（正解 + ランダム3つ）
-  const choices = [question.correct];
+  // 正解を含む4択を作成
+  const choices = [question.meaning];
   while (choices.length < 4) {
-    const wrong = words[Math.floor(Math.random() * words.length)].correct;
+    const wrong = words[Math.floor(Math.random() * words.length)].meaning;
     if (!choices.includes(wrong)) {
       choices.push(wrong);
     }
@@ -40,7 +40,7 @@ function nextQuestion() {
     const btn = document.createElement("button");
     btn.textContent = choice;
     btn.className = "choice";
-    btn.onclick = () => checkAnswer(choice, question.correct);
+    btn.onclick = () => checkAnswer(choice, question.meaning);
     choicesDiv.appendChild(btn);
   });
 
