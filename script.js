@@ -1,11 +1,21 @@
 let words = [];
 
 async function loadWords() {
-  // 外部のTOEFL単語データ（JSON形式）
-  const url = "https://raw.githubusercontent.com/mahavivo/english-wordlists/master/toefl.json";
-  const res = await fetch(url);
-  words = await res.json();
-  nextQuestion();
+  try {
+    // 外部のTOEFL単語データ
+    const url = "https://raw.githubusercontent.com/mahavivo/english-wordlists/master/toefl.json";
+    const res = await fetch(url);
+    words = await res.json();
+
+    if (!Array.isArray(words) || words.length === 0) {
+      throw new Error("単語データが読み込めませんでした");
+    }
+
+    nextQuestion();
+  } catch (err) {
+    document.getElementById("quiz").innerHTML = "単語データの読み込みに失敗しました。";
+    console.error(err);
+  }
 }
 
 function nextQuestion() {

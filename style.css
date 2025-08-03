@@ -4,21 +4,35 @@ body {
   margin: auto;
   padding: 20px;
 }
+
+h1 {
+  text-align: center;
+}
+
 #word {
   font-size: 1.5em;
   margin-bottom: 20px;
+  text-align: center;
 }
+
 button.choice {
   display: block;
   margin: 5px 0;
   padding: 10px;
   width: 100%;
+  font-size: 1em;
 }
+
 #result {
   margin-top: 20px;
   font-weight: bold;
+  text-align: center;
 }
+
 #next {
   margin-top: 20px;
   padding: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
