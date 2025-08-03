@@ -1,8 +1,9 @@
 let words = [];
+let score = 0;
+let gameOver = false;
 
 async function loadWords() {
   try {
-    // 自分のGitHub Pages上のJSONファイルのURLに置き換え
     const url = "https://booskabooboo.github.io/toefl-vocab-quiz/toefl_words.json";
     const res = await fetch(url);
     words = await res.json();
@@ -11,18 +12,28 @@ async function loadWords() {
       throw new Error("単語データが読み込めませんでした");
     }
 
-    nextQuestion();
+    resetGame();
   } catch (err) {
     document.getElementById("quiz").innerHTML = "単語データの読み込みに失敗しました。";
     console.error(err);
   }
 }
 
+function resetGame() {
+  score = 0;
+  gameOver = false;
+  document.getElementById("result").textContent = "";
+  document.getElementById("next").textContent = "Next";
+  nextQuestion();
+}
+
 function nextQuestion() {
+  if (gameOver) return;
+
   const question = words[Math.floor(Math.random() * words.length)];
   document.getElementById("word").textContent = question.word;
 
-  // 正解を含む4択を作成
+  // 正解を含む4択作成
   const choices = [question.meaning];
   while (choices.length < 4) {
     const wrong = words[Math.floor(Math.random() * words.length)].meaning;
@@ -44,20 +55,36 @@ function nextQuestion() {
     choicesDiv.appendChild(btn);
   });
 
-  document.getElementById("result").textContent = "";
+  updateScore();
 }
 
 function checkAnswer(selected, correct) {
   const result = document.getElementById("result");
+
   if (selected === correct) {
+    score++;
     result.textContent = "Correct!";
     result.style.color = "green";
+    nextQuestion();
   } else {
-    result.textContent = `Wrong! Correct answer: ${correct}`;
+    result.textContent = `Wrong! Game Over! Final Score: ${score}`;
     result.style.color = "red";
+    gameOver = true;
+    document.getElementById("next").textContent = "Restart";
   }
+  updateScore();
 }
 
-document.getElementById("next").onclick = nextQuestion;
+function updateScore() {
+  document.getElementById("score-display").textContent = `Score: ${score}`;
+}
+
+document.getElementById("next").onclick = () => {
+  if (gameOver) {
+    resetGame();
+  } else {
+    nextQuestion();
+  }
+};
 
 loadWords();
